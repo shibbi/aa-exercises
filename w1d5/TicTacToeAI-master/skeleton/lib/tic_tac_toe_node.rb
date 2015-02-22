@@ -1,44 +1,44 @@
-require**relative 'tic**tac**toe'
+require_relative 'tic_tac_toe'
 require 'byebug'
 
 class TicTacToeNode
-  attr**accessor :board, :next**mover**mark, :prev**move**pos
+  attr_accessor :board, :next_mover_mark, :prev_move_pos
 
-  def initialize(board, next**mover**mark, prev**move**pos = nil)
+  def initialize(board, next_mover_mark, prev_move_pos = nil)
     @board = board
-    @next**mover**mark = next**mover**mark
-    @prev**move**pos = prev**move**pos
+    @next_mover_mark = next_mover_mark
+    @prev_move_pos = prev_move_pos
   end
 
-  def losing**node?(evaluator)
+  def losing_node?(evaluator)
     return false if @board.tied?
     return evaluator != @board.winner if @board.over?
 
-    if @next**mover**mark == evaluator
+    if @next_mover_mark == evaluator
       children.inject(true) do |outcome, child|
-        outcome && child.losing**node?(evaluator)
+        outcome && child.losing_node?(evaluator)
       end
     else
       children.inject(false) do |outcome, child|
-        outcome || child.losing**node?(evaluator)
+        outcome || child.losing_node?(evaluator)
       end
     end
   end
 
-  def self.toggle**mark(mark)
+  def self.toggle_mark(mark)
     mark == :x ? :o : :x
   end
 
-  def winning**node?(evaluator)
+  def winning_node?(evaluator)
     return evaluator == @board.winner if @board.over?
 
-    if @next**mover**mark == evaluator
+    if @next_mover_mark == evaluator
       children.inject(false) do |outcome, child|
-        outcome || child.winning**node?(evaluator)
+        outcome || child.winning_node?(evaluator)
       end
     else
       children.inject(true) do |outcome, child|
-        outcome && child.winning**node?(evaluator)
+        outcome && child.winning_node?(evaluator)
       end
     end
   end
@@ -46,28 +46,28 @@ class TicTacToeNode
   # This method generates an array of all moves that can be made after
   # the current move.
   def children
-    children**nodes = []
-    @board.rows.each**index do |x|
-      @board.rows[x].each**index do |y|
-        child**mark = TicTacToeNode.toggle**mark(@next**mover**mark)
+    children_nodes = []
+    @board.rows.each_index do |x|
+      @board.rows[x].each_index do |y|
+        child_mark = TicTacToeNode.toggle_mark(@next_mover_mark)
         next unless @board.rows[x][y].nil?
-        new**board = @board.dup
-        new**board.rows[x][y] = child**mark
-        children**nodes << TicTacToeNode.new(new**board, child**mark, [x, y])
+        new_board = @board.dup
+        new_board.rows[x][y] = child_mark
+        children_nodes << TicTacToeNode.new(new_board, child_mark, [x, y])
       end
     end
 
-    children**nodes
+    children_nodes
   end
 
-  def print**board(board)
+  def print_board(board)
     puts '---------'
-    board.each**index do |i|
+    board.each_index do |i|
       print '|'
       if board[i].nil?
         print ' '
       else
-        print board[i].to**s
+        print board[i].to_s
       end
       print '|'
       puts ' ' if (i + 1) % 3 == 0

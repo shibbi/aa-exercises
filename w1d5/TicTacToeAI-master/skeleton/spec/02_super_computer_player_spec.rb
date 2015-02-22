@@ -1,59 +1,59 @@
 require 'rspec'
-require 'tic**tac**toe'
-require 'super**computer**player'
+require 'tic_tac_toe'
+require 'super_computer_player'
 
 describe SuperComputerPlayer do
   subject { SuperComputerPlayer.new }
-  let(:winnable**game) do
-    test**board = Board.new
-    test**board[[0,0]] = :x
-    test**board[[0,1]] = :x
-    test**board[[1,0]] = :o
-    test**board[[1,1]] = :o
-    double("TicTacToe", :board => test**board)
+  let(:winnable_game) do
+    test_board = Board.new
+    test_board[[0,0]] = :x
+    test_board[[0,1]] = :x
+    test_board[[1,0]] = :o
+    test_board[[1,1]] = :o
+    double("TicTacToe", :board => test_board)
   end
-  let(:blockable**win**game) do
-    test**board = Board.new
-    test**board[[0,0]] = :x
-    test**board[[1,0]] = :o
-    test**board[[1,1]] = :o
-    double("TicTacToe", :board => test**board)
+  let(:blockable_win_game) do
+    test_board = Board.new
+    test_board[[0,0]] = :x
+    test_board[[1,0]] = :o
+    test_board[[1,1]] = :o
+    double("TicTacToe", :board => test_board)
   end
-  let(:non**winnable**game) do
-    test**board = Board.new
-    test**board[[0,0]] = :o
-    test**board[[2,2]] = :o
-    test**board[[2,0]] = :o
-    double("TicTacToe", :board => test**board)
+  let(:non_winnable_game) do
+    test_board = Board.new
+    test_board[[0,0]] = :o
+    test_board[[2,2]] = :o
+    test_board[[2,0]] = :o
+    double("TicTacToe", :board => test_board)
   end
-  let(:two**moves**to**victory**game) do
-    test**board = Board.new
-    test**board[[0,0]] = :x
-    test**board[[2,2]] = :x
-    test**board[[1,1]] = :o
-    double("TicTacToe", :board => test**board)
+  let(:two_moves_to_victory_game) do
+    test_board = Board.new
+    test_board[[0,0]] = :x
+    test_board[[2,2]] = :x
+    test_board[[1,1]] = :o
+    double("TicTacToe", :board => test_board)
   end
 
 
   describe "#move" do
     it "chooses winning move if one is available" do
-      expect(subject.move(winnable**game, :x)).to eq([0,2])
+      expect(subject.move(winnable_game, :x)).to eq([0,2])
     end
 
     it "can pick a winner that is two moves away" do
-      move = subject.move(two**moves**to**victory**game, :x)
-      expected**moves = [[0,2], [2,0]]
-      expect(expected**moves.find(move)).to**not be**nil
+      move = subject.move(two_moves_to_victory_game, :x)
+      expected_moves = [[0,2], [2,0]]
+      expect(expected_moves.find(move)).to_not be_nil
     end
 
     it "blocks an opponents winning move" do
       #remove our opportunity to win with one move
-      expect(subject.move(blockable**win**game, :x)).to eq([1,2])
+      expect(subject.move(blockable_win_game, :x)).to eq([1,2])
     end
     it "raises an error if it cannot find a winning or draw inducing move" do
       expect do
-        subject.move(non**winnable**game, :x)
-      end.to raise**error
+        subject.move(non_winnable_game, :x)
+      end.to raise_error
     end
   end
 

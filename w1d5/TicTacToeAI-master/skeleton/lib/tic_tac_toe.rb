@@ -1,13 +1,13 @@
 # DON'T EDIT ME!
 
 class Board
-  attr**reader :rows
+  attr_reader :rows
 
-  def self.blank**grid
+  def self.blank_grid
     Array.new(3) { Array.new(3) }
   end
 
-  def initialize(rows = self.class.blank**grid)
+  def initialize(rows = self.class.blank_grid)
     @rows = rows
   end
 
@@ -26,8 +26,8 @@ class Board
   def cols
     cols = [[], [], []]
     @rows.each do |row|
-      row.each**with**index do |mark, col**idx|
-        cols[col**idx] << mark
+      row.each_with_index do |mark, col_idx|
+        cols[col_idx] << mark
       end
     end
 
@@ -35,10 +35,10 @@ class Board
   end
 
   def diagonals
-    down**diag = [[0, 0], [1, 1], [2, 2]]
-    up**diag = [[0, 2], [1, 1], [2, 0]]
+    down_diag = [[0, 0], [1, 1], [2, 2]]
+    up_diag = [[0, 2], [1, 1], [2, 0]]
 
-    [down**diag, up**diag].map do |diag|
+    [down_diag, up_diag].map do |diag|
       # Note the `x, y` inside the block; this unpacks, or
       # "destructures" the argument. Read more here:
       # http://tony.pitluga.com/2011/08/08/destructuring-with-ruby.html
@@ -47,8 +47,8 @@ class Board
   end
 
   def dup
-    duped**rows = rows.map(&:dup)
-    self.class.new(duped**rows)
+    duped_rows = rows.map(&:dup)
+    self.class.new(duped_rows)
   end
 
   def empty?(pos)
@@ -92,7 +92,7 @@ class TicTacToe
   class IllegalMoveError < RuntimeError
   end
 
-  attr**reader :board, :players, :turn
+  attr_reader :board, :players, :turn
 
   def initialize(player1, player2)
     @board = Board.new
@@ -102,12 +102,12 @@ class TicTacToe
 
   def run
     until self.board.over?
-      play**turn
+      play_turn
     end
 
     if self.board.won?
-      winning**player = self.players[self.board.winner]
-      puts "#{winning**player.name} won the game!"
+      winning_player = self.players[self.board.winner]
+      puts "#{winning_player.name} won the game!"
     else
       puts "No one wins!"
     end
@@ -119,7 +119,7 @@ class TicTacToe
   end
 
   private
-  def place**mark(pos, mark)
+  def place_mark(pos, mark)
     if self.board.empty?(pos)
       self.board[pos] = mark
       true
@@ -128,12 +128,12 @@ class TicTacToe
     end
   end
 
-  def play**turn
+  def play_turn
     while true
-      current**player = self.players[self.turn]
-      pos = current**player.move(self, self.turn)
+      current_player = self.players[self.turn]
+      pos = current_player.move(self, self.turn)
 
-      break if place**mark(pos, self.turn)
+      break if place_mark(pos, self.turn)
     end
 
     # swap next whose turn it will be next
@@ -142,7 +142,7 @@ class TicTacToe
 end
 
 class HumanPlayer
-  attr**reader :name
+  attr_reader :name
 
   def initialize(name)
     @name = name
@@ -152,8 +152,8 @@ class HumanPlayer
     game.show
     while true
       puts "#{@name}: please select your space"
-      x, y = gets.chomp.split(",").map(&:to**i)
-      if HumanPlayer.valid**coord?(x, y)
+      x, y = gets.chomp.split(",").map(&:to_i)
+      if HumanPlayer.valid_coord?(x, y)
         return [x, y]
       else
         puts "Invalid coordinate!"
@@ -162,24 +162,24 @@ class HumanPlayer
   end
 
   private
-  def self.valid**coord?(x, y)
+  def self.valid_coord?(x, y)
     [x, y].all? { |coord| (0..2).include?(coord) }
   end
 end
 
 class ComputerPlayer
-  attr**reader :name
+  attr_reader :name
 
   def initialize
     @name = "Tandy 400"
   end
 
   def move(game, mark)
-    winner**move(game, mark) || random**move(game)
+    winner_move(game, mark) || random_move(game)
   end
 
   private
-  def winner**move(game, mark)
+  def winner_move(game, mark)
     (0..2).each do |x|
       (0..2).each do |y|
         board = game.board.dup
@@ -196,10 +196,10 @@ class ComputerPlayer
     nil
   end
 
-  def random**move(game)
+  def random_move(game)
     board = game.board
     while true
-      range = (0..2).to**a
+      range = (0..2).to_a
       pos = [range.sample, range.sample]
 
       return pos if board.empty?(pos)
@@ -207,7 +207,7 @@ class ComputerPlayer
   end
 end
 
-if ****FILE**** == $PROGRAM**NAME
+if __FILE__ == $PROGRAM_NAME
   puts "Play the dumb computer!"
   hp = HumanPlayer.new("Ned")
   cp = ComputerPlayer.new
