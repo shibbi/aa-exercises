@@ -1,3 +1,3 @@
-Exercises
+**Exercises**
 
-All aA exercises
+Implementations of aA exercises
