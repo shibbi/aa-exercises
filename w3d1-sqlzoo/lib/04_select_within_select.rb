@@ -35,6 +35,19 @@ end
 def larger_than_russia
   # List each country name where the population is larger than 'Russia'.
   execute(<<-SQL)
+    SELECT
+      name
+    FROM
+      countries
+    WHERE
+      population > (
+        SELECT
+          population
+        FROM
+          countries
+        WHERE
+          name='Russia'
+        )
   SQL
 end
 
@@ -42,6 +55,19 @@ def richer_than_england
   # Show the countries in Europe with a per capita GDP greater than
   # 'United Kingdom'.
   execute(<<-SQL)
+  SELECT
+    name
+  FROM
+    countries
+  WHERE
+    gdp / population > (
+      SELECT
+        gdp / population
+      FROM
+        countries
+      WHERE
+        name = 'United Kingdom'
+    )
   SQL
 end
 
@@ -49,6 +75,19 @@ def neighbors_of_b_countries
   # List the name and continent of countries in the continents containing
   # 'Belize', 'Belgium'.
   execute(<<-SQL)
+  SELECT
+    name, continent
+  FROM
+    countries
+  WHERE
+    continent IN (
+      SELECT DISTINCT
+        continent
+      FROM
+        countries
+      WHERE
+        name = 'Belize' OR name = 'Belgium'
+    )
   SQL
 end
 
@@ -56,6 +95,26 @@ def population_constraint
   # Which country has a population that is more than Canada but less than
   # Poland? Show the name and the population.
   execute(<<-SQL)
+  SELECT
+    name, population
+  FROM
+    countries
+  WHERE
+    population > (
+      SELECT
+        population
+      FROM
+        countries
+      WHERE
+        name = 'Canada'
+    ) AND population < (
+      SELECT
+        population
+      FROM
+        countries
+      WHERE
+        name = 'Poland'
+    )
   SQL
 end
 
@@ -63,5 +122,31 @@ def sparse_continents
   # Find each country that belongs to a continent where all populations are
   # less than 25,000,000. Show name, continent and population.
   execute(<<-SQL)
+    SELECT
+      c.name, c.continent, c.population
+    FROM
+      countries AS c
+    JOIN
+      (
+        SELECT
+          continent, COUNT(*) AS count
+        FROM
+          countries
+        WHERE
+          population < 25000000
+        GROUP BY
+          continent
+      ) sparse_c ON c.continent = sparse_c.continent
+    WHERE
+      c.continent IN (
+        SELECT
+          continent
+        FROM
+          countries
+        GROUP BY
+          continent
+        HAVING
+          COUNT(*) = sparse_c.count
+        )
   SQL
 end

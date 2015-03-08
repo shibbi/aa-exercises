@@ -41,7 +41,7 @@ describe "music JOINs" do
 
   describe "heart_tracks" do
     it "selects albums with songs containing the word 'Heart'" do
-      expect(heart_tracks).to eq([
+      expect(heart_tracks).to match_array([
         ["Bing! His Legendary Years, 1931 to 1957 [BOX SET]", "5"],
         ["The Greatest Hits", "4"],
         ["Forty Years-Artistry of Tony B", "3"],
