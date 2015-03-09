@@ -1,3 +1,4 @@
-**Exercises**
+Exercises
+=====
 
 Implementations of aA exercises
