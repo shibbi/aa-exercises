@@ -2,10 +2,10 @@
 */.DS_Store
 *~
 
-w2/checkers
-w2/chess
-w2/poker
-w3/ActiveRecordLite/
-w3/blogger/
+w2/checkers/*
+w2/chess/*
+w2/poker/*
+w3/ActiveRecordLite/*
+w3/blogger/*
 w4/*
 w5/*
