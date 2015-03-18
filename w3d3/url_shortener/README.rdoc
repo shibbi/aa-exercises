@@ -1,4 +1,0 @@
-== README
-
-This is a URL shortener implemented using Rails.
-Run the 'rails runner bin/cli' command to test the script.
